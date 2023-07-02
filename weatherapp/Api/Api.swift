@@ -11,7 +11,13 @@ let baseUrl = "https://api.openweathermap.org/data/3.0/onecall"
 
 func getWeatherDataByCoordinates(latitude: Double, longitude: Double, language: String, completion: @escaping (WeatherData?, Error?) -> Void) {
     
-    print(Enviroment.apiKey)
+    if Enviroment.apiKey == "" {
+        let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "No API Key"])
+        completion(nil, error)
+        return
+    }
+    
+    
     
     let url =  "\(baseUrl)?&lat=\(latitude)&lon=\(longitude)&lang=\(language)&units=metric&appid=\(Enviroment.apiKey)"
     
