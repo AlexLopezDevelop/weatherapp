@@ -86,11 +86,11 @@
 		FAE72DF12A5011590094A9EB /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main.strings; sourceTree = "<group>"; };
 		FAE72DF22A50115A0094A9EB /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		FAE72DF32A50115A0094A9EB /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
-		FAE72DF42A5011800094A9EB /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
-		FAE72DF52A5011800094A9EB /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		FAE72DF62A5011800094A9EB /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		FAE72DF92A5173FD0094A9EB /* Development.xconfig.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Development.xconfig.xcconfig; sourceTree = "<group>"; };
 		FAE72DFA2A51752B0094A9EB /* Enviroment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enviroment.swift; sourceTree = "<group>"; };
+		FAE72DFE2A51D0DB0094A9EB /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
+		FAE72DFF2A51D0DB0094A9EB /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		FAE72E002A51D0DB0094A9EB /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -323,7 +323,7 @@
 				en,
 				Base,
 				es,
-				de,
+				fr,
 			);
 			mainGroup = FAE72D842A4C189F0094A9EB;
 			productRefGroup = FAE72D8E2A4C189F0094A9EB /* Products */;
@@ -430,7 +430,7 @@
 			children = (
 				FAE72D972A4C189F0094A9EB /* Base */,
 				FAE72DF12A5011590094A9EB /* es */,
-				FAE72DF42A5011800094A9EB /* de */,
+				FAE72DFE2A51D0DB0094A9EB /* fr */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -440,7 +440,7 @@
 			children = (
 				FAE72D9C2A4C18A10094A9EB /* Base */,
 				FAE72DF22A50115A0094A9EB /* es */,
-				FAE72DF52A5011800094A9EB /* de */,
+				FAE72DFF2A51D0DB0094A9EB /* fr */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -450,7 +450,7 @@
 			children = (
 				FAE72DEF2A5011470094A9EB /* en */,
 				FAE72DF32A50115A0094A9EB /* es */,
-				FAE72DF62A5011800094A9EB /* de */,
+				FAE72E002A51D0DB0094A9EB /* fr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

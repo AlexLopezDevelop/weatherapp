@@ -1,0 +1,6 @@
+"ENABLE_LOCATION" = "Activer la localisation";
+"ALLOW_ACCESS_TO_LOCATION" = "Autoriser l'accès à votre position";
+"LOCATION_PERMISSION_DENIED_TITLE" = "Autorisation de localisation refusée";
+"LOCATION_PERMISSION_DENIED_MESSAGE" = "Veuillez activer l'autorisation de localisation dans les paramètres.";
+"SETTINGS" = "Paramètres";
+"CANCEL" = "Annuler";

@@ -72,8 +72,8 @@ func getCurrentLanguage(codeLang: String) -> String {
             return "es"
         case "en":
             return "en"
-        case "ca":
-            return "ca"
+        case "fr":
+            return "fr"
         default:
             return "en"
     }

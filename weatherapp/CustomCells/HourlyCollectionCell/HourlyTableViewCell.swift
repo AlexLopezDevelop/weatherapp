@@ -36,6 +36,7 @@ class HourlyTableViewCell: UITableViewCell {
            let temp = model.temp,
            let icon = weather.icon {
             self.hourLabel.text = convertUnixDateTimeToHuman(timestamp: timestamp)
+            self.descriptionLabel.adjustsFontSizeToFitWidth = true
             self.descriptionLabel.text = uppercaseFirstCharacter(string: description)
             self.tempLabel.text = "\(Int(round(temp)))°"
             self.iconImageView.image = getUIImageFromImagename(imageName: icon)
