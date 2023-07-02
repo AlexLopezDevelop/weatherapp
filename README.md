@@ -18,9 +18,20 @@ This application utilizes the [OpenWeatherMap One Call API](https://openweatherm
 
 ## Installation
 
-1. Clone the repository.
+1. Clone the repository to your local machine.
 2. Open the project in Xcode.
-3. Build and run the app on a simulator or device.
+3. In the project navigator, locate the `Development.xconfig` file.
+4. Open the `Development.xconfig` file and add your API key from [OpenWeatherMap](https://openweathermap.org/api/one-call-api) in the following format:
+
+    ```
+    API_KEY = // Add your API key
+    ```
+
+   Replace `// Add your API key` with your actual API key.
+
+5. Save the `Development.xconfig` file.
+
+6. Build and run the application in Xcode.
 
 ## License
 
