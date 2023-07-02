@@ -6,23 +6,26 @@
 //
 
 import UIKit
+import CoreLocation
 
 class WeatherTableViewCell: UITableViewCell {
 
     @IBOutlet var tempLabel         : UILabel!
-    @IBOutlet var feelsLikeLabel    : UILabel!
+    @IBOutlet var cityLabel         : UILabel!
+    @IBOutlet var humidityLabel     : UILabel!
+    @IBOutlet var windLabel         : UILabel!
+    @IBOutlet var descriptionLabel  : UILabel!
     @IBOutlet var iconImageView     : UIImageView!
+    
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        backgroundColor = .gray
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
-        // Configure the view for the selected state
+        selectionStyle = .none
     }
     
     static let identifier = "WeatherTableViewCell"
@@ -30,11 +33,15 @@ class WeatherTableViewCell: UITableViewCell {
         return UINib(nibName: identifier, bundle: nil)
     }
     
-    func configuration(with model: Current) {
-        self.tempLabel.text      = " \(Int(round(model.temp!)))°"
-        //self.feelsLikeLabel.text    = "\(model.feelsLike)"
-        self.iconImageView.image = getUIImageFromImagename(imageName: model.weather!.first!.icon!)
+    func configuration(with model: WeatherData, cityName: String) {
         
-    
+        let current     = model.current!
+        let currentData = current.weather!.first!                
+        self.tempLabel.text         = " \(Int(round(current.temp!)))°"
+        self.iconImageView.image    = getUIImageFromImagename(imageName: currentData.icon!)
+        self.humidityLabel.text     = "\(current.humidity!)%"
+        self.windLabel.text         = "\(Int(round(current.windSpeed!))) m/s"
+        self.descriptionLabel.text  = uppercaseFirstCharacter(string: currentData.description!)
+        self.cityLabel.text = cityName
     }
 }

@@ -1,0 +1,6 @@
+"ENABLE_LOCATION"                       = "Enable Location";
+"ALLOW_ACCESS_TO_LOCATION"              = "Allow access to your location";
+"LOCATION_PERMISSION_DENIED_TITLE"      = "Location Permission Denied";
+"LOCATION_PERMISSION_DENIED_MESSAGE"    = "Please enable location permission from settings.";
+"SETTINGS"                              = "Settings";
+"CANCEL"                                = "Cancel";

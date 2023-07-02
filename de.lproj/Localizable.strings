@@ -1,0 +1,6 @@
+"ENABLE_LOCATION"              = "Standortdienste aktivieren";
+"ALLOW_ACCESS_TO_LOCATION"              = "Zugriff auf deinen Standort erlauben";
+"LOCATION_PERMISSION_DENIED_TITLE"      = "Standortberechtigung verweigert";
+"LOCATION_PERMISSION_DENIED_MESSAGE"    = "Bitte aktiviere die Standortberechtigung in den Einstellungen.";
+"SETTINGS"                              = "Einstellungen";
+"CANCEL"                                = "Abbrechen";

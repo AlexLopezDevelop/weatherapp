@@ -1,0 +1,9 @@
+
+/* Class = "UIButton"; configuration.title = "Allow location"; ObjectID = "P8d-Hj-eaV"; */
+"P8d-Hj-eaV.configuration.title" = "Allow location";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "P8d-Hj-eaV"; */
+"P8d-Hj-eaV.normalTitle" = "Button";
+
+/* Class = "UILabel"; text = "Enable location access 📍"; ObjectID = "Peh-18-Af1"; */
+"Peh-18-Af1.text" = "Enable location access 📍";

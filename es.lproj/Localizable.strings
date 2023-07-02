@@ -1,0 +1,6 @@
+"ENABLE_LOCATION"                       = "Habilitar ubicación";
+"ALLOW_ACCESS_TO_LOCATION"              = "Permitir acceso a tu ubicación";
+"LOCATION_PERMISSION_DENIED_TITLE"      = "Permiso de ubicación denegado";
+"LOCATION_PERMISSION_DENIED_MESSAGE"    = "Habilita el permiso de ubicación desde la configuración.";
+"SETTINGS"                              = "Configuración";
+"CANCEL"                                = "Cancelar";

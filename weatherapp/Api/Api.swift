@@ -7,11 +7,13 @@
 
 import Foundation
 
-let baseUrl = "https://api.openweathermap.org/data/3.0/onecall?lat=33.44&lon=-94.04&units=metric&appid=5b21269625255535dd2fcb969cdf9602"
+let baseUrl = "https://api.openweathermap.org/data/3.0/onecall"
 
-func getWeatherDataByCoordinates(latitude: Double, longitude: Double, completion: @escaping (WeatherData?, Error?) -> Void) {
+func getWeatherDataByCoordinates(latitude: Double, longitude: Double, language: String, completion: @escaping (WeatherData?, Error?) -> Void) {
     
-    let url = baseUrl
+    print(Enviroment.apiKey)
+    
+    let url =  "\(baseUrl)?&lat=\(latitude)&lon=\(longitude)&lang=\(language)&units=metric&appid=\(Enviroment.apiKey)"
     
     URLSession.shared.dataTask(with: URL(string: url)!, completionHandler: {data, response, error in
         guard let data = data, error == nil else {
@@ -35,8 +37,4 @@ func getWeatherDataByCoordinates(latitude: Double, longitude: Double, completion
         completion(weatherData, nil)
       
     }).resume()
-    
-    //let decoder = JSONDecoder()
-    
-    //return nil
 }

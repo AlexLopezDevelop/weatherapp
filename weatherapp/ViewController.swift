@@ -10,30 +10,107 @@ import CoreLocation
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
     
-    @IBOutlet var table:    UITableView!
+    @IBOutlet var tableView:    UITableView!
     
+    let activityIndicator   = UIActivityIndicatorView(style: .large)
     let locationManager     = CLLocationManager()
-    var weatherData              = WeatherData()
-    var currentLocation:    CLLocation?
+    var weatherData         = WeatherData()
+    let enableLocationView  = UIView()
+    var currentLocation     : CLLocation?
+    var cityName            : String = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        table.register(HourlyTableViewCell.nib(),   forCellReuseIdentifier: HourlyTableViewCell.identifier)
-        table.register(WeatherTableViewCell.nib(),  forCellReuseIdentifier: WeatherTableViewCell.identifier)
-        
-        table.delegate          = self
-        table.dataSource        = self
-
-        table.backgroundColor   = .white
-        table.separatorStyle    = .none
+        setupTableView()
+        setupEnableLocationView()
+        setupLocation()
+        setupActivityIndicator()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    func setupTableView() {
+        tableView.register(HourlyTableViewCell.nib(),   forCellReuseIdentifier: HourlyTableViewCell.identifier)
+        tableView.register(WeatherTableViewCell.nib(),  forCellReuseIdentifier: WeatherTableViewCell.identifier)
         
-        setupLocation()
+        tableView.delegate          = self
+        tableView.dataSource        = self
+        tableView.backgroundColor   = .clear
+        tableView.separatorStyle    = .none
+        
+        let refreshControl = UIRefreshControl()
+            refreshControl.addTarget(self, action: #selector(refreshWeatherData), for: .valueChanged)
+            tableView.refreshControl = refreshControl
     }
+    
+    func setupEnableLocationView() {
+        enableLocationView.isHidden = true
+        view.addSubview(enableLocationView)
+        
+        enableLocationView.translatesAutoresizingMaskIntoConstraints                        = false
+        enableLocationView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive   = true
+        enableLocationView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive   = true
+        enableLocationView.widthAnchor.constraint(equalToConstant: 200).isActive            = true
+        enableLocationView.heightAnchor.constraint(equalToConstant: 200).isActive           = true
+        
+        let enableLocationLabel             = UILabel()
+        enableLocationLabel.text            = NSLocalizedString("ALLOW_ACCESS_TO_LOCATION", comment: "Allow access location")
+        enableLocationLabel.textAlignment   = .center
+        enableLocationView.addSubview(enableLocationLabel)
+        
+        enableLocationLabel.translatesAutoresizingMaskIntoConstraints                                       = false
+        enableLocationLabel.centerXAnchor.constraint(equalTo: enableLocationView.centerXAnchor).isActive    = true
+        enableLocationLabel.centerYAnchor.constraint(equalTo: enableLocationView.centerYAnchor).isActive    = true
+        
+        let enableLocationButton = UIButton(type: .system)
+        enableLocationButton.setTitle(NSLocalizedString("ENABLE_LOCATION", comment: "Enable location"), for: .normal)
+        enableLocationView.addSubview(enableLocationButton)
+        enableLocationButton.translatesAutoresizingMaskIntoConstraints                                              = false
+        enableLocationButton.topAnchor.constraint(equalTo: enableLocationLabel.bottomAnchor, constant: 20).isActive = true
+        enableLocationButton.centerXAnchor.constraint(equalTo: enableLocationView.centerXAnchor).isActive           = true
+        enableLocationButton.addTarget(self, action: #selector(requestLocationPermissions), for: .touchUpInside)
+        
+        let backgroundColors = getBackgroundColor(code: "")
+        removeGradient(from: self.view)
+        addGradient(to: self.view, colorTop: backgroundColors.colorTop, colorBottom: backgroundColors.colorBottom)
+    }
+    
+    func setupActivityIndicator() {
+        activityIndicator.center            = self.view.center
+        activityIndicator.color             = .white
+        activityIndicator.hidesWhenStopped  = true
+        self.view.addSubview(activityIndicator)
+    }
+    
+    @objc func refreshWeatherData() {
+        requestWeatherForLocation()
+    }
+    
+    // MARK: - Alerts
+    
+    @objc func requestLocationPermissions() {
+        let alertController = UIAlertController(
+            title: NSLocalizedString("LOCATION_PERMISSION_DENIED_TITLE", comment: "Location Permission Denied"),
+            message: NSLocalizedString("LOCATION_PERMISSION_DENIED_MESSAGE", comment: "Please enable location permission from settings."),
+            preferredStyle: .alert
+        )
+        
+        let settingsAction = UIAlertAction(
+            title: NSLocalizedString("SETTINGS", comment: "Settings"),
+            style: .default,
+            handler: { _ in
+                guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+                    return
+                }
+                UIApplication.shared.open(settingsUrl, options: [:], completionHandler: nil)
+            }
+        )
+        
+        alertController.addAction(settingsAction)
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("CANCEL", comment: "Cancel"), style: .cancel, handler: nil))
+        
+        present(alertController, animated: true, completion: nil)
+    }
+    
     
     // MARK: - Location
     
@@ -43,21 +120,66 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         locationManager.startUpdatingLocation()
     }
     
+    func checkLocationPermission() {
+        let status = locationManager.authorizationStatus
+               
+        switch status {
+        case .authorizedAlways, .authorizedWhenInUse:
+            // Show table view
+            enableLocationView.isHidden = true
+            tableView.isHidden = false
+            // TODO: Fetch and display location-related data in the table view
+        case .denied, .restricted:
+            // Show permission view
+            enableLocationView.isHidden = false
+            tableView.isHidden = true
+        case .notDetermined:
+            // Show permission view
+            enableLocationView.isHidden = false
+            tableView.isHidden = true
+        @unknown default:
+            break
+        }
+      }
+    
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+           checkLocationPermission() // Handle changes in location authorization status
+       }
+    
     func requestWeatherForLocation() {
         guard let currentLocation = currentLocation else {
             return
         }
         
-        let longitude   = currentLocation.coordinate.longitude
-        let latitude    = currentLocation.coordinate.latitude
+        let longitude       = currentLocation.coordinate.longitude
+        let latitude        = currentLocation.coordinate.latitude
+        let language        = Locale.preferredLanguages.first
+        let currentLanguage = getCurrentLanguage(codeLang: extractLanguageCode(languageCode: language!)!)
         
-        getWeatherDataByCoordinates(latitude: 37.7749, longitude: -122.4194) { weatherData, error in
+        getCityNameFromLocation(location: currentLocation) { cityName in
+               DispatchQueue.main.async {
+                   self.cityName = cityName ?? ""
+               }
+           }
+        
+        getWeatherDataByCoordinates(latitude: latitude, longitude: longitude, language: currentLanguage) { weatherData, error in
+            
+            DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+                self.tableView.refreshControl?.endRefreshing()
+            }
+            
             if let weatherData = weatherData {
             
                 self.weatherData = weatherData
+                                
+                let backgroundColors = getBackgroundColor(code: weatherData.current!.weather!.first!.icon!)
                 
                 DispatchQueue.main.async {
-                    self.table.reloadData()
+                    self.tableView.reloadData()
+                    
+                    removeGradient(from: self.view)
+                    addGradient(to: self.view, colorTop: backgroundColors.colorTop, colorBottom: backgroundColors.colorBottom)
                 }
             
                 
@@ -74,10 +196,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if !locations.isEmpty, currentLocation == nil {
             currentLocation = locations.first
             locationManager.stopUpdatingLocation()
+            activityIndicator.startAnimating()
             requestWeatherForLocation()
         }
     }
-    
     
     // MARK: - TableView
     
@@ -104,7 +226,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             let cell = tableView.dequeueReusableCell(withIdentifier: WeatherTableViewCell.identifier, for: indexPath) as! WeatherTableViewCell
             
-            cell.configuration(with: weatherData.current!)
+            cell.backgroundColor = .clear
+            cell.configuration(with: weatherData, cityName: cityName)
             
             return cell
             
@@ -112,7 +235,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             let cell = tableView.dequeueReusableCell(withIdentifier: HourlyTableViewCell.identifier, for: indexPath) as! HourlyTableViewCell
             
+            cell.backgroundColor = .clear
             cell.configuration(with: weatherData.hourly![indexPath.row])
+            
             return cell
         }
         

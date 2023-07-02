@@ -45,5 +45,4 @@ struct WeatherData: Codable {
   init() {
 
   }
-
 }

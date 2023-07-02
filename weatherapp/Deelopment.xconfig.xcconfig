@@ -1,0 +1,11 @@
+//
+//  Deelopment.xconfig.xcconfig
+//  weatherapp
+//
+//  Created by Alex Lopez on 2/7/23.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+API_KEY = 5b21269625255535dd2fcb969cdf9602

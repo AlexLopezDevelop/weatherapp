@@ -17,13 +17,16 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OBA-d9-UeZ">
-                        <rect key="frame" x="272.66666666666669" y="29" width="41.333333333333314" height="20.333333333333329"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <rect key="frame" x="274" y="29" width="40" height="20.333333333333329"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="40" id="MHG-iq-Ny6"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="u4j-Nh-Jl8">
-                        <rect key="frame" x="20" y="21.666666666666671" width="125" height="35"/>
+                        <rect key="frame" x="20" y="21.666666666666671" width="244" height="35"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MPv-EU-5RO">
                                 <rect key="frame" x="0.0" y="0.0" width="70" height="35"/>
@@ -42,23 +45,35 @@
                                     <constraint firstAttribute="width" secondItem="Orf-Sj-G3l" secondAttribute="height" multiplier="1:1" id="euc-Rk-jj9"/>
                                 </constraints>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gvt-Ls-klj">
+                                <rect key="frame" x="145" y="0.0" width="99" height="35"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
+                        <constraints>
+                            <constraint firstItem="Orf-Sj-G3l" firstAttribute="leading" secondItem="MPv-EU-5RO" secondAttribute="trailing" constant="20" id="uKt-Bm-tuy"/>
+                        </constraints>
                     </stackView>
                 </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstItem="u4j-Nh-Jl8" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" symbolic="YES" id="4af-62-l8m"/>
                     <constraint firstItem="u4j-Nh-Jl8" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="CEv-Tq-0E0"/>
                     <constraint firstAttribute="trailing" secondItem="OBA-d9-UeZ" secondAttribute="trailing" constant="20" symbolic="YES" id="H82-rt-ojl"/>
+                    <constraint firstItem="OBA-d9-UeZ" firstAttribute="leading" secondItem="u4j-Nh-Jl8" secondAttribute="trailing" constant="10" id="RZK-bP-N2e"/>
                     <constraint firstItem="OBA-d9-UeZ" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="ZGX-oa-i2U"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
+                <outlet property="descriptionLabel" destination="gvt-Ls-klj" id="1zd-jV-2e1"/>
                 <outlet property="hourLabel" destination="MPv-EU-5RO" id="CSV-bl-ueC"/>
                 <outlet property="iconImageView" destination="Orf-Sj-G3l" id="Szo-Rb-EzW"/>
                 <outlet property="tempLabel" destination="OBA-d9-UeZ" id="uZO-NE-mMF"/>
             </connections>
-            <point key="canvasLocation" x="140.45801526717557" y="0.70422535211267612"/>
+            <point key="canvasLocation" x="79" y="9"/>
         </tableViewCell>
     </objects>
 </document>
