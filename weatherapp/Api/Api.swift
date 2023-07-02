@@ -11,36 +11,34 @@ let baseUrl = "https://api.openweathermap.org/data/3.0/onecall"
 
 func getWeatherDataByCoordinates(latitude: Double, longitude: Double, language: String, completion: @escaping (WeatherData?, Error?) -> Void) {
     
-    if Enviroment.apiKey == "" {
-        let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "No API Key"])
+    guard !Enviroment.apiKey.isEmpty else {
+        let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "No API Key"])
         completion(nil, error)
         return
     }
     
+    let url = "\(baseUrl)?&lat=\(latitude)&lon=\(longitude)&lang=\(language)&units=metric&appid=\(Enviroment.apiKey)"
     
+    guard let url = URL(string: url) else {
+        let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
+        completion(nil, error)
+        return
+    }
     
-    let url =  "\(baseUrl)?&lat=\(latitude)&lon=\(longitude)&lang=\(language)&units=metric&appid=\(Enviroment.apiKey)"
-    
-    URLSession.shared.dataTask(with: URL(string: url)!, completionHandler: {data, response, error in
+    URLSession.shared.dataTask(with: url) { data, response, error in
         guard let data = data, error == nil else {
-            print("Error Api call")
+            print("Error API call: \(error?.localizedDescription ?? "")")
             completion(nil, error)
             return
         }
         
-        var json: WeatherData?
-        
         do {
-            json = try JSONDecoder().decode(WeatherData.self, from: data)
+            let json = try JSONDecoder().decode(WeatherData.self, from: data)
+            completion(json, nil)
         } catch {
-            print("Error \(error)")
+            print("Error decoding JSON: \(error)")
+            completion(nil, error)
         }
-        
-        guard let weatherData = json else {
-            return
-        }
-        
-        completion(weatherData, nil)
-      
-    }).resume()
+    }.resume()
 }
+

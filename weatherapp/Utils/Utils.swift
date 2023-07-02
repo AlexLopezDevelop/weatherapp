@@ -21,28 +21,13 @@ func convertUnixDateTimeToHuman(timestamp: Int) -> String? {
     return dateFormatter.string(from: date)
 }
 
-func getUIImageFromImagename(imageName: String) -> UIImage {
-    switch (imageName) {
-        case "01n":
-            return UIImage(named: "01d")!
-        case "02n":
-            return UIImage(named: "02d")!
-        case "03n":
-            return UIImage(named: "03d")!
-        case "04n":
-            return UIImage(named: "04d")!
-        case "09n":
-            return UIImage(named: "09d")!
-        case "10n":
-            return UIImage(named: "10d")!
-        case "11n":
-            return UIImage(named: "11d")!
-        case "13n":
-            return UIImage(named: "13d")!
-        case "50n":
-            return UIImage(named: "50d")!
-        default:
-            return UIImage(named: imageName)!
+func getUIImageFromImagename(imageName: String) -> UIImage? {
+    switch imageName {
+    case "01n", "02n", "03n", "04n", "09n", "10n", "11n", "13n", "50n":
+        let dayImageName = imageName.replacingOccurrences(of: "n", with: "d")
+        return UIImage(named: dayImageName)
+    default:
+        return UIImage(named: imageName)
     }
 }
 

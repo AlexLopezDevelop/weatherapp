@@ -30,10 +30,16 @@ class HourlyTableViewCell: UITableViewCell {
     }
     
     func configuration(with model: Hourly) {
-        self.hourLabel.text = convertUnixDateTimeToHuman(timestamp: model.dt!)
-        self.descriptionLabel.text = uppercaseFirstCharacter(string: model.weather!.first!.description!)
-        self.tempLabel.text = "\(Int(round(model.temp!)))°"
-        self.iconImageView.image = getUIImageFromImagename(imageName: model.weather!.first!.icon!)
-    
+        if let timestamp = model.dt,
+           let weather = model.weather?.first,
+           let description = weather.description,
+           let temp = model.temp,
+           let icon = weather.icon {
+            self.hourLabel.text = convertUnixDateTimeToHuman(timestamp: timestamp)
+            self.descriptionLabel.text = uppercaseFirstCharacter(string: description)
+            self.tempLabel.text = "\(Int(round(temp)))°"
+            self.iconImageView.image = getUIImageFromImagename(imageName: icon)
+        }
     }
+
 }

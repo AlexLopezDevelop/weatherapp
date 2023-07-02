@@ -14,25 +14,9 @@
             filePath = "weatherapp/Utils/Utils.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "76"
-            endingLineNumber = "76"
-            landmarkName = "getCityNameFromLocation(location:completion:)"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "6AD5AA21-471D-4E1A-B0D7-3AAE47FD7E65"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "weatherapp/Api/Api.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14"
-            endingLineNumber = "14"
-            landmarkName = "getWeatherDataByCoordinates(latitude:longitude:language:completion:)"
+            startingLineNumber = "61"
+            endingLineNumber = "61"
+            landmarkName = "getLocationFromTimezone(timezone:)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>

@@ -157,8 +157,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         let longitude       = currentLocation.coordinate.longitude
         let latitude        = currentLocation.coordinate.latitude
-        let language        = Locale.preferredLanguages.first
-        let currentLanguage = getCurrentLanguage(codeLang: extractLanguageCode(languageCode: language!)!)
+        let language        = Locale.preferredLanguages.first ?? ""
+        let currentLanguage = getCurrentLanguage(codeLang: extractLanguageCode(languageCode: language) ?? "")
         
         getCityNameFromLocation(location: currentLocation) { cityName in
                DispatchQueue.main.async {
@@ -173,11 +173,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 self.tableView.refreshControl?.endRefreshing()
             }
             
-            if let weatherData = weatherData {
-            
+            if let weatherData = weatherData,
+               let currentWeather = weatherData.current,
+               let weatherIcon = currentWeather.weather?.first?.icon {
+                
                 self.weatherData = weatherData
-                                
-                let backgroundColors = getBackgroundColor(code: weatherData.current!.weather!.first!.icon!)
+                
+                let backgroundColors = getBackgroundColor(code: weatherIcon)
                 
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
@@ -185,7 +187,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     removeGradient(from: self.view)
                     addGradient(to: self.view, colorTop: backgroundColors.colorTop, colorBottom: backgroundColors.colorBottom)
                 }
-            
                 
             } else if let error = error {
                 // TODO: Handle the error
@@ -227,27 +228,29 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            
-            let cell = tableView.dequeueReusableCell(withIdentifier: WeatherTableViewCell.identifier, for: indexPath) as! WeatherTableViewCell
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: WeatherTableViewCell.identifier, for: indexPath) as? WeatherTableViewCell else {
+                return UITableViewCell()
+            }
             
             cell.backgroundColor = .clear
             cell.configuration(with: weatherData, cityName: cityName)
             
             return cell
-            
         } else if indexPath.section == 1 {
-            
-            let cell = tableView.dequeueReusableCell(withIdentifier: HourlyTableViewCell.identifier, for: indexPath) as! HourlyTableViewCell
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: HourlyTableViewCell.identifier, for: indexPath) as? HourlyTableViewCell,
+                  let hourlyData = weatherData.hourly?[indexPath.row] else {
+                return UITableViewCell()
+            }
             
             cell.backgroundColor = .clear
-            cell.configuration(with: weatherData.hourly![indexPath.row])
+            cell.configuration(with: hourlyData)
             
             return cell
         }
         
         return UITableViewCell()
-    
     }
+
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 {
