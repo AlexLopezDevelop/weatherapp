@@ -8,16 +8,17 @@
 import UIKit
 import CoreLocation
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, EnableLocationViewDelegate {
     
     @IBOutlet var tableView:    UITableView!
     
-    let activityIndicator   = UIActivityIndicatorView(style: .large)
-    let locationManager     = CLLocationManager()
-    var weatherData         = WeatherData()
-    let enableLocationView  = UIView()
-    var currentLocation     : CLLocation?
-    var cityName            : String = ""
+    let activityIndicator       = UIActivityIndicatorView(style: .large)
+    var weatherData             = WeatherData()
+    let enableLocationView      = EnableLocationView()
+    let locationManager         = CLLocationManager()
+    var locationManagerDelegate : LocationManagerDelegate?
+    var currentLocation         : CLLocation?
+    var cityName                : String = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,39 +44,22 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func setupEnableLocationView() {
-        enableLocationView.isHidden = true
-        view.addSubview(enableLocationView)
-        
+        enableLocationView.delegate = self
+        self.view.addSubview(enableLocationView)
+           
         enableLocationView.translatesAutoresizingMaskIntoConstraints = false
-        enableLocationView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        enableLocationView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        enableLocationView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        enableLocationView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
         enableLocationView.widthAnchor.constraint(equalToConstant: 200).isActive = true
         enableLocationView.heightAnchor.constraint(equalToConstant: 200).isActive = true
-        
-        let enableLocationLabel = UILabel()
-        enableLocationLabel.text = NSLocalizedString("ALLOW_ACCESS_TO_LOCATION", comment: "Allow access location")
-        enableLocationLabel.textAlignment = .center
-        enableLocationLabel.font = UIFont.boldSystemFont(ofSize: 20) // Set bold and font size
-        enableLocationView.addSubview(enableLocationLabel)
-        
-        enableLocationLabel.translatesAutoresizingMaskIntoConstraints = false
-        enableLocationLabel.centerXAnchor.constraint(equalTo: enableLocationView.centerXAnchor).isActive = true
-        enableLocationLabel.centerYAnchor.constraint(equalTo: enableLocationView.centerYAnchor).isActive = true
-        
-        let enableLocationButton = UIButton(type: .system)
-        enableLocationButton.configuration = filledButtonConfiguration()
-        enableLocationButton.setTitle(NSLocalizedString("ENABLE_LOCATION", comment: "Enable location"), for: .normal)
-        enableLocationButton.addTarget(self, action: #selector(requestLocationPermissions), for: .touchUpInside)
-        enableLocationView.addSubview(enableLocationButton)
-        
-        enableLocationButton.translatesAutoresizingMaskIntoConstraints = false
-        enableLocationButton.topAnchor.constraint(equalTo: enableLocationLabel.bottomAnchor, constant: 20).isActive = true
-        enableLocationButton.centerXAnchor.constraint(equalTo: enableLocationView.centerXAnchor).isActive = true
         
         let backgroundColors = getBackgroundColor(code: "")
         removeGradient(from: self.view)
         addGradient(to: self.view, colorTop: backgroundColors.colorTop, colorBottom: backgroundColors.colorBottom)
+        
+        enableLocationView.isHidden = false
     }
+
 
 
     func setupActivityIndicator() {
@@ -84,6 +68,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         activityIndicator.hidesWhenStopped  = true
         self.view.addSubview(activityIndicator)
     }
+    
+    func enableLocationButtonTapped() {
+            requestLocationPermissions()
+        }
     
     @objc func refreshWeatherData() {
         requestWeatherForLocation()
@@ -119,7 +107,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // MARK: - Location
     
     func setupLocation() {
-        locationManager.delegate = self
+        locationManagerDelegate = LocationManagerDelegate(viewController: self)
+        locationManager.delegate = locationManagerDelegate
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
     }
@@ -129,25 +118,22 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                
         switch status {
         case .authorizedAlways, .authorizedWhenInUse:
-            // Show table view
             enableLocationView.isHidden = true
             tableView.isHidden = false
-            // TODO: Fetch and display location-related data in the table view
+            requestWeatherForLocation()
         case .denied, .restricted:
-            // Show permission view
             enableLocationView.isHidden = false
             tableView.isHidden = true
         case .notDetermined:
-            // Show permission view
             enableLocationView.isHidden = false
             tableView.isHidden = true
         @unknown default:
             break
         }
-      }
+    }
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-           checkLocationPermission() // Handle changes in location authorization status
+           checkLocationPermission()
        }
     
     func requestWeatherForLocation() {
@@ -189,7 +175,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 }
                 
             } else if let error = error {
-                // TODO: Handle the error
                 print(error)
             }
         }

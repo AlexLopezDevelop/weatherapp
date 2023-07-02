@@ -33,6 +33,8 @@
 		FAE72DE52A4D6D400094A9EB /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE72DE42A4D6D400094A9EB /* Utils.swift */; };
 		FAE72DEE2A5011470094A9EB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FAE72DF02A5011470094A9EB /* Localizable.strings */; };
 		FAE72DFB2A51752B0094A9EB /* Enviroment.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE72DFA2A51752B0094A9EB /* Enviroment.swift */; };
+		FAE72E032A51D44C0094A9EB /* EnableLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE72E022A51D44C0094A9EB /* EnableLocationView.swift */; };
+		FAE72E092A51D7220094A9EB /* LocationManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE72E082A51D7220094A9EB /* LocationManagerDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +93,8 @@
 		FAE72DFE2A51D0DB0094A9EB /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
 		FAE72DFF2A51D0DB0094A9EB /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		FAE72E002A51D0DB0094A9EB /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		FAE72E022A51D44C0094A9EB /* EnableLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnableLocationView.swift; sourceTree = "<group>"; };
+		FAE72E082A51D7220094A9EB /* LocationManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +146,8 @@
 		FAE72D8F2A4C189F0094A9EB /* weatherapp */ = {
 			isa = PBXGroup;
 			children = (
+				FAE72E072A51D70A0094A9EB /* Location */,
+				FAE72E012A51D42B0094A9EB /* Views */,
 				FAE72DE32A4D6D290094A9EB /* Utils */,
 				FAE72DCE2A4C2C140094A9EB /* Api */,
 				FAE72DC32A4C1CE80094A9EB /* CustomCells */,
@@ -234,6 +240,22 @@
 				FAE72DFA2A51752B0094A9EB /* Enviroment.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		FAE72E012A51D42B0094A9EB /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FAE72E022A51D44C0094A9EB /* EnableLocationView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		FAE72E072A51D70A0094A9EB /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				FAE72E082A51D7220094A9EB /* LocationManagerDelegate.swift */,
+			);
+			path = Location;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -372,6 +394,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAE72E092A51D7220094A9EB /* LocationManagerDelegate.swift in Sources */,
 				FAE72DDA2A4C633D0094A9EB /* Weather.swift in Sources */,
 				FAE72DFB2A51752B0094A9EB /* Enviroment.swift in Sources */,
 				FAE72DC82A4C1D520094A9EB /* WeatherTableViewCell.swift in Sources */,
@@ -382,6 +405,7 @@
 				FAE72DDE2A4C633D0094A9EB /* Daily.swift in Sources */,
 				FAE72DE52A4D6D400094A9EB /* Utils.swift in Sources */,
 				FAE72DDF2A4C633D0094A9EB /* Hourly.swift in Sources */,
+				FAE72E032A51D44C0094A9EB /* EnableLocationView.swift in Sources */,
 				FAE72DDD2A4C633D0094A9EB /* WeatherData.swift in Sources */,
 				FAE72D912A4C189F0094A9EB /* AppDelegate.swift in Sources */,
 				FAE72DCC2A4C1D730094A9EB /* HourlyTableViewCell.swift in Sources */,

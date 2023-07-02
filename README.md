@@ -33,6 +33,17 @@ This application utilizes the [OpenWeatherMap One Call API](https://openweatherm
 
 6. Build and run the application in Xcode.
 
+## Language Support
+
+The Weather App supports the following languages:
+
+- English
+- Spanish
+- French
+
+To change the language of the app, ensure that your device is set to one of the supported languages.
+
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
