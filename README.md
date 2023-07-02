@@ -37,9 +37,9 @@ This application utilizes the [OpenWeatherMap One Call API](https://openweatherm
 
 The Weather App supports the following languages:
 
-- English
-- Spanish
-- French
+- English 🇺🇸
+- Spanish 🇪🇸
+- French 🇫🇷
 
 To change the language of the app, ensure that your device is set to one of the supported languages.
 
