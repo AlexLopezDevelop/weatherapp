@@ -169,3 +169,14 @@ func removeGradient(from view: UIView) {
         }
     }
 }
+
+// MARK: - Button Configuration
+
+func filledButtonConfiguration() -> UIButton.Configuration {
+    var buttonConfig = UIButton.Configuration.filled()
+    buttonConfig.baseBackgroundColor = UIColor.systemBlue
+    buttonConfig.cornerStyle = .medium
+    buttonConfig.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20)
+    
+    return buttonConfig
+}

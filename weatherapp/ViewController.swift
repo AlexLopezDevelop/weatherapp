@@ -46,34 +46,38 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         enableLocationView.isHidden = true
         view.addSubview(enableLocationView)
         
-        enableLocationView.translatesAutoresizingMaskIntoConstraints                        = false
-        enableLocationView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive   = true
-        enableLocationView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive   = true
-        enableLocationView.widthAnchor.constraint(equalToConstant: 200).isActive            = true
-        enableLocationView.heightAnchor.constraint(equalToConstant: 200).isActive           = true
+        enableLocationView.translatesAutoresizingMaskIntoConstraints = false
+        enableLocationView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        enableLocationView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        enableLocationView.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        enableLocationView.heightAnchor.constraint(equalToConstant: 200).isActive = true
         
-        let enableLocationLabel             = UILabel()
-        enableLocationLabel.text            = NSLocalizedString("ALLOW_ACCESS_TO_LOCATION", comment: "Allow access location")
-        enableLocationLabel.textAlignment   = .center
+        let enableLocationLabel = UILabel()
+        enableLocationLabel.text = NSLocalizedString("ALLOW_ACCESS_TO_LOCATION", comment: "Allow access location")
+        enableLocationLabel.textAlignment = .center
+        enableLocationLabel.font = UIFont.boldSystemFont(ofSize: 20) // Set bold and font size
         enableLocationView.addSubview(enableLocationLabel)
         
-        enableLocationLabel.translatesAutoresizingMaskIntoConstraints                                       = false
-        enableLocationLabel.centerXAnchor.constraint(equalTo: enableLocationView.centerXAnchor).isActive    = true
-        enableLocationLabel.centerYAnchor.constraint(equalTo: enableLocationView.centerYAnchor).isActive    = true
+        enableLocationLabel.translatesAutoresizingMaskIntoConstraints = false
+        enableLocationLabel.centerXAnchor.constraint(equalTo: enableLocationView.centerXAnchor).isActive = true
+        enableLocationLabel.centerYAnchor.constraint(equalTo: enableLocationView.centerYAnchor).isActive = true
         
         let enableLocationButton = UIButton(type: .system)
+        enableLocationButton.configuration = filledButtonConfiguration()
         enableLocationButton.setTitle(NSLocalizedString("ENABLE_LOCATION", comment: "Enable location"), for: .normal)
-        enableLocationView.addSubview(enableLocationButton)
-        enableLocationButton.translatesAutoresizingMaskIntoConstraints                                              = false
-        enableLocationButton.topAnchor.constraint(equalTo: enableLocationLabel.bottomAnchor, constant: 20).isActive = true
-        enableLocationButton.centerXAnchor.constraint(equalTo: enableLocationView.centerXAnchor).isActive           = true
         enableLocationButton.addTarget(self, action: #selector(requestLocationPermissions), for: .touchUpInside)
+        enableLocationView.addSubview(enableLocationButton)
+        
+        enableLocationButton.translatesAutoresizingMaskIntoConstraints = false
+        enableLocationButton.topAnchor.constraint(equalTo: enableLocationLabel.bottomAnchor, constant: 20).isActive = true
+        enableLocationButton.centerXAnchor.constraint(equalTo: enableLocationView.centerXAnchor).isActive = true
         
         let backgroundColors = getBackgroundColor(code: "")
         removeGradient(from: self.view)
         addGradient(to: self.view, colorTop: backgroundColors.colorTop, colorBottom: backgroundColors.colorBottom)
     }
-    
+
+
     func setupActivityIndicator() {
         activityIndicator.center            = self.view.center
         activityIndicator.color             = .white
