@@ -42,9 +42,13 @@ class Provider: IntentTimelineProvider {
         widgetLocationManager.fetchLocation(handler: { location in
             getWeatherDataByCoordinates(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude, language: "", completion: { weatherData, _ in
 
+                
                 let entry = WeatherEntry(date: date, configuration: configuration, weatherData: weatherData)
-                let timeline = Timeline(entries: [entry], policy: .never)
-
+                
+                let nextUpdateDate = Calendar.current.date(byAdding: .hour, value: 1, to: date)!
+                
+                let timeline = Timeline(entries: [entry], policy: .after(nextUpdateDate))
+                
                 completion(timeline)
             })
         })
