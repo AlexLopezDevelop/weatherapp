@@ -6,8 +6,6 @@
 	<string>$(API_KEY)</string>
 	<key>NSWidgetWantsLocation</key>
 	<true/>
-	<key>NSLocationUsageDescription</key>
-	<string>Weather needs access to your location for have the best expefience</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

@@ -45,7 +45,7 @@ class Provider: IntentTimelineProvider {
                 
                 let entry = WeatherEntry(date: date, configuration: configuration, weatherData: weatherData)
                 
-                let nextUpdateDate = Calendar.current.date(byAdding: .hour, value: 1, to: date)!
+                let nextUpdateDate = Calendar.current.date(byAdding: .minute, value: 30, to: date)!
                 
                 let timeline = Timeline(entries: [entry], policy: .after(nextUpdateDate))
                 
@@ -78,6 +78,7 @@ struct weatherWidgetExtensionEntryView: View {
                     .foregroundColor(.white)
             }
         }
+        .widgetBackground(backgroundView: self)
     }
 }
 
@@ -88,8 +89,8 @@ struct weatherWidgetExtension: Widget {
         IntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: Provider()) { entry in
             weatherWidgetExtensionEntryView(entry: entry)
         }
-        .configurationDisplayName("My Widget")
-        .description("This is an example widget.")
+        .configurationDisplayName("WeatherLite")
+        .description("Shows the current weather")
     }
 }
 
@@ -97,5 +98,17 @@ struct weatherWidgetExtension_Previews: PreviewProvider {
     static var previews: some View {
         weatherWidgetExtensionEntryView(entry: WeatherEntry(date: Date(), configuration: ConfigurationIntent(), weatherData: WeatherData()))
             .previewContext(WidgetPreviewContext(family: .systemSmall))
+    }
+}
+
+extension View {
+    func widgetBackground(backgroundView: some View) -> some View {
+        if #available(iOSApplicationExtension 17.0, *) {
+            return containerBackground(for: .widget) {
+                backgroundView
+            }
+        } else {
+            return background(backgroundView)
+        }
     }
 }
