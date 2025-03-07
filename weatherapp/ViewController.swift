@@ -7,8 +7,10 @@
 
 import UIKit
 import CoreLocation
+import GoogleMobileAds
+import StoreKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, EnableLocationViewDelegate {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, EnableLocationViewDelegate, BannerViewDelegate {
     
     @IBOutlet var tableView:    UITableView!
     
@@ -19,6 +21,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var locationManagerDelegate : LocationManagerDelegate?
     var currentLocation         : CLLocation?
     var cityName                : String = ""
+    var bannerView              : BannerView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +30,74 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         setupEnableLocationView()
         setupLocation()
         setupActivityIndicator()
+        setupBannerView()
+        
+        // Track app launches for review prompt logic
+        incrementAppLaunchCount()
+    }
+    
+    // Add this new method to setup the AdMob banner
+    func setupBannerView() {
+        let viewWidth = view.frame.inset(by: view.safeAreaInsets).width
+        
+        // Create adaptive banner size based on current orientation
+        let adaptiveSize = currentOrientationAnchoredAdaptiveBanner(width: viewWidth)
+        bannerView = BannerView(adSize: adaptiveSize)
+        
+        bannerView.adUnitID = "ca-app-pub-5574323560669848/3764007261"
+        bannerView.rootViewController = self
+        bannerView.delegate = self
+        
+        // Load the ad
+        bannerView.load(Request())
+    }
+    
+    // Add banner to view after receiving ad
+    func bannerViewDidReceiveAd(_ bannerView: BannerView) {
+        print("bannerViewDidReceiveAd")
+        addBannerViewToView(bannerView)
+        
+        // Add bottom inset to tableView to prevent banner from covering content
+        let bannerHeight = bannerView.adSize.size.height
+        self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: bannerHeight, right: 0)
+        self.tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: bannerHeight, right: 0)
+    }
+    
+    func bannerView(_ bannerView: BannerView, didFailToReceiveAdWithError error: Error) {
+        print("bannerView:didFailToReceiveAdWithError: \(error.localizedDescription)")
+    }
+    
+    func bannerViewDidRecordImpression(_ bannerView: BannerView) {
+        print("bannerViewDidRecordImpression")
+    }
+    
+    func bannerViewWillPresentScreen(_ bannerView: BannerView) {
+        print("bannerViewWillPresentScreen")
+    }
+    
+    func bannerViewWillDismissScreen(_ bannerView: BannerView) {
+        print("bannerViewWillDismissScreen")
+    }
+    
+    func bannerViewDidDismissScreen(_ bannerView: BannerView) {
+        print("bannerViewDidDismissScreen")
+    }
+    
+    func addBannerViewToView(_ bannerView: BannerView) {
+        bannerView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(bannerView)
+        
+        // Add constraints to position the banner at the bottom of the screen
+        NSLayoutConstraint.activate([
+            bannerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            bannerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+        ])
+        
+        // Optional: Add animation for a smoother appearance
+        bannerView.alpha = 0
+        UIView.animate(withDuration: 1) {
+            bannerView.alpha = 1
+        }
     }
     
     func setupTableView() {
@@ -172,6 +243,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     
                     removeGradient(from: self.view)
                     addGradient(to: self.view, colorTop: backgroundColors.colorTop, colorBottom: backgroundColors.colorBottom)
+                    
+                    // Track successful weather data load for review prompt logic
+                    self.trackSuccessfulWeatherLoad()
                 }
                 
             } else if let error = error {
@@ -245,6 +319,80 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         
         return 0
+    }
+    
+    // MARK: - App Review Logic
+    
+    private func incrementAppLaunchCount() {
+        let defaults = UserDefaults.standard
+        let launchCount = defaults.integer(forKey: "app_launch_count") + 1
+        defaults.set(launchCount, forKey: "app_launch_count")
+        
+        // Check if this is the first launch after an app update
+        let currentVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
+        let lastVersionPromptedForReview = defaults.string(forKey: "last_version_prompted_for_review") ?? ""
+        
+        if currentVersion != lastVersionPromptedForReview {
+            // Reset count of successful weather loads for this version
+            defaults.set(0, forKey: "successful_weather_loads_count")
+        }
+    }
+    
+    private func trackSuccessfulWeatherLoad() {
+        let defaults = UserDefaults.standard
+        let successfulLoads = defaults.integer(forKey: "successful_weather_loads_count") + 1
+        defaults.set(successfulLoads, forKey: "successful_weather_loads_count")
+        
+        // Check if we should request a review
+        checkAndRequestReview()
+    }
+    
+    private func checkAndRequestReview() {
+        let defaults = UserDefaults.standard
+        
+        // Don't show if user has already rated or declined multiple times
+        if defaults.bool(forKey: "user_rated_app") {
+            return
+        }
+        
+        let launchCount = defaults.integer(forKey: "app_launch_count")
+        let successfulLoads = defaults.integer(forKey: "successful_weather_loads_count")
+        let lastPromptDate = defaults.object(forKey: "last_review_prompt_date") as? Date
+        
+        // Logic conditions for showing the review prompt:
+        // 1. App has been launched at least 5 times
+        // 2. User has successfully loaded weather data at least 3 times
+        // 3. It's been at least 14 days since the last prompt (if ever)
+        // 4. No more than 3 prompts total
+        let totalPrompts = defaults.integer(forKey: "review_prompt_count")
+        let promptFrequencyDays = 14.0
+        
+        let shouldPrompt = launchCount >= 5 &&
+                          successfulLoads >= 3 &&
+                          totalPrompts < 3 &&
+                          (lastPromptDate == nil || 
+                           Date().timeIntervalSince(lastPromptDate!) / (60 * 60 * 24) >= promptFrequencyDays)
+        
+        if shouldPrompt {
+            // Update tracking info
+            defaults.set(Date(), forKey: "last_review_prompt_date")
+            defaults.set(totalPrompts + 1, forKey: "review_prompt_count")
+            
+            // Store current version to avoid re-prompting for same version
+            let currentVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
+            defaults.set(currentVersion, forKey: "last_version_prompted_for_review")
+            
+            // Request review
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                if #available(iOS 14.0, *) {
+                    if let windowScene = UIApplication.shared.windows.first?.windowScene {
+                        SKStoreReviewController.requestReview(in: windowScene)
+                    }
+                } else {
+                    SKStoreReviewController.requestReview()
+                }
+            }
+        }
     }
 }
 
