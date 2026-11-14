@@ -35,7 +35,23 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         // Track app launches for review prompt logic
         incrementAppLaunchCount()
     }
-    
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        // Keep the background gradient full-screen after rotation on iPad
+        view.layer.sublayers?
+            .compactMap { $0 as? CAGradientLayer }
+            .forEach { $0.frame = view.bounds }
+    }
+
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animate(alongsideTransition: { _ in
+            let width = self.view.frame.inset(by: self.view.safeAreaInsets).width
+            self.bannerView.adSize = currentOrientationAnchoredAdaptiveBanner(width: width)
+        })
+    }
+
     // Add this new method to setup the AdMob banner
     func setupBannerView() {
         let viewWidth = view.frame.inset(by: view.safeAreaInsets).width
@@ -134,10 +150,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
 
     func setupActivityIndicator() {
-        activityIndicator.center            = self.view.center
         activityIndicator.color             = .white
         activityIndicator.hidesWhenStopped  = true
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(activityIndicator)
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+        ])
     }
     
     func enableLocationButtonTapped() {
